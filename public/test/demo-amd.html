@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>内嵌页标准头</title>
+	<meta charset='utf-8'>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<link rel="stylesheet" href="//cdnst.immomo.com/momofes/css/mobile/common.1.2.4.css"/>
+</head>
+
+<body>
+<div>点击下方方框选择时间</div>
+<div class="start-time" role="show-datepicker" _for="start_time" show-time="start_time">start</div>
+<input type="hidden" id="start_time" />
+
+<div>点击下方方框选择时间</div>
+<div class="end-time" role="show-datepicker" _for="end_time" show-time="end_time">end</div>
+<input type="hidden" id="end_time" />
+
+<div class="calendar">
+</div>
+
+<script>
+	var require = {
+		baseUrl: '/',
+		urlArgs: "v=1.0.1"
+	};
+</script>
+<script src="../release/require/require.js" data-main="release/2015/module-test/main2-2313"></script>
+</body>
+</html>

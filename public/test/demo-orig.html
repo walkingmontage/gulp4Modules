@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>内嵌页标准头</title>
+	<meta charset='utf-8'>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<link rel="stylesheet" href="//cdnst.immomo.com/momofes/css/mobile/common.1.2.0.css"/>
+</head>
+
+<body>
+<script src="../src/jquery/jquery-2.1.4.min.js"></script>
+<script src="../src/modules/mHistory/mHistory.js"></script>
+<script src="../src/modules/mDialog/mDialog.js"></script>
+<script src="../src/modules/mClone/mClone.js"></script>
+<script>
+	$(function(){
+		$.alert({
+			content:'这是一个提示',
+			callback:function(){},
+			title:'标题',
+			btn:'按钮文本'
+		});
+
+		alert(mClone)
+	});
+</script>
+</body>
+</html>
