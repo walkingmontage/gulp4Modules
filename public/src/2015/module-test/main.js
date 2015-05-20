@@ -34,7 +34,6 @@ require(['zepto', 'mDialog', 'mClone', 'datePicker', 'calendar'], function($){
 		});
 		cal.init();
 
-		alert('123456')
-		alert('123456');
+		alert('hhhhhhhhhhhhhh');
 	});
 });
