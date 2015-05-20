@@ -34,10 +34,6 @@
 	modules: [
 	 {
 		 name: 'module-test/main'
-	 },
-	 {
-		 name: 'module-test2/main2',
-		 exclude: ['jquery']
 	 }
 	]
 })

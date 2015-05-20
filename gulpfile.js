@@ -1,6 +1,7 @@
 var
 	gulp = require('gulp'),
 	path = require('path'),
+	gulpif = require('gulp-if'),
 	concat = require('gulp-concat'),
 	uglify = require('gulp-uglify'),
 	gutil = require('gulp-util'),
@@ -20,28 +21,32 @@ var
 
 var
 	//获取gulp命令的参数
-	options = _.extend({}, {
-		name: '',
-		exclude: '',
-		md5: '',
-		product: 'demo'
-	}, argv),
+	name = argv.n || '',
+	exclude = argv.e || '',
+	md5 = typeof argv.m === 'boolean' ? false : argv.m,
+	product = argv.p || 'demo', //product 业务模块
+	moduleName = name.split('/')[0],
+	fileName = name.split('/')[1],
+	gulpCommand = argv._[0];
 
 
-	//@baseDevPath 是业务开发目录，默认为public/src/demo/ 可通过options.product参数改变
+if(gulpCommand === 'release' && (!name || !moduleName || !fileName)){
+	log(colors.red('请补充 -n 参数，指定模块名称!'));
+	return;
+}
+
+
+	//@baseDevPath 是业务开发目录，默认为public/src/demo/ 可通过p参数改变
 	//@baseBuildPath 是业务打包目录，默认值和参数同上
 
+var
 	basePath = 'public/src/',
-	baseDevPath = 'public/src/' + options.product + '/',
-	baseTempPath = 'public/release-temp/' + options.product + '/',
-	baseBuildPath = 'public/release/' + options.product + '/',
-	name = options.name.split('/'),
+	baseDevPath = 'public/src/' + product + '/',
+	baseTempPath = 'public/release-temp/' + product + '/',
+	baseBuildPath = 'public/release/' + product + '/',
+
 
 	isModuleExists = function(fsName, type, all){
-		if(!options.name && !all){
-			log(colors.red('请输入 --name参数，指定模块名称!'));
-			return false;
-		}
 		if(!fs.existsSync(fsName)){
 			log(colors.red('没有找到该目录的'+ type +'文件：'), fsName);
 			return false;
@@ -49,22 +54,20 @@ var
 		return true;
 	};
 
-
 //打包单个文件，如打包 module-test/main.js
 gulp.task('rjs', function(cb){
-	if(!isModuleExists(baseDevPath + options.name + '.js', 'js')){
+	if(!isModuleExists(baseDevPath + name + '.js', 'js')){
 		return;
 	}
-	var outpath = baseTempPath + options.name + '.js';
+	var outpath = baseTempPath + name + '.js';
 
-	if(name.legnth===0) return;
 	var command =
 		'r.js -o '+ basePath +'rjs-config-s.js name='+
-		name[1] +
+		fileName +
 		' baseUrl='+ baseDevPath +
-		name[0] +
+		moduleName +
 		' out=' + outpath +
-		(options.exclude ? (' exclude=' + options.exclude) : '');
+		(exclude ? (' exclude=' + exclude) : '');
 
 	console.log(command);
 	exec(command, function(err) {
@@ -89,14 +92,14 @@ gulp.task('rjs-all', function(cb){
 
 //less
 gulp.task('less', function(){
-	if(!isModuleExists(baseDevPath + name[0], 'less')){
+	if(!isModuleExists(baseDevPath + moduleName, 'less')){
 		return;
 	}
 
-	gulp.src(baseDevPath + name[0] + '/**/*.less')
+	gulp.src(baseDevPath + moduleName + '/**/*.less')
 		.pipe(less())
 		.pipe(minifyCSS())
-		.pipe(gulp.dest(baseTempPath + name[0]));
+		.pipe(gulp.dest(baseTempPath + moduleName));
 });
 
 
@@ -139,29 +142,33 @@ var rmOrig = function() {
 
 /*
 	打包单个模块，gulp命令：
-		gulp release --name module-test/main --exclude zepto,mClone --md5
-	*/
+	gulp release -n module-test/main
+*/
 
 gulp.task('release', ['rjs', 'less'], function(cb){
-	if(!options.md5) return;
-	gulp.src([baseTempPath + name[0] +'/**/*.{js,css}'])
-		.pipe(rename(function (path) {
-			path.basename += "-" + options.md5;
-		}))
+	gulp.src([baseTempPath + moduleName +'/**/*.{js,css}'])
+		.pipe(gulpif(md5, rename(function (path) {
+			path.basename += "-" + md5;
+		})))
 		.pipe(rev())
-		.pipe(gulp.dest(baseBuildPath  + name[0]))
-	//manifest
-	//.pipe(rev.manifest())
-	//.pipe(gulp.dest(baseBuildPath))
+		.pipe(gulp.dest(baseBuildPath  + moduleName))
+
+		//manifest
+		//.pipe(rev.manifest())
+		//.pipe(gulp.dest(baseBuildPath))
 	.pipe(rmOrig())
 });
 
+
+/*
+	打包文件夹，gulp命令：
+	gulp release-all -m
+ */
 gulp.task('release-all', ['rjs-all', 'less-all'], function() {
-	if(!options.md5) return;
 	gulp.src([baseTempPath + '**/*.{js,css}'])
-		.pipe(rename(function (path) {
-			path.basename += "-" + options.md5;
-		}))
+		.pipe(gulpif(md5, rename(function (path) {
+			path.basename += "-" + md5;
+		})))
 		.pipe(rev())
 		.pipe(gulp.dest(baseBuildPath))
 		.pipe(rmOrig())
