@@ -4,7 +4,7 @@
 	}else{
 		root.mHistory = factory();
 	}
-}(window, function(exports) {
+}(window, function() {
 
 	// A simple h5 history adpater, don't work with h4 browser & firefox(bfcache?).
 	var mHistory = {

@@ -1,13 +1,11 @@
 //=========时间选择控件=============
 ;(function (root, factory) {
 	if (typeof define === 'function' && define.amd){
-		define(['mHistory'], function(mh){
-			factory(mh)
-		});
+		define(['zepto', 'mHistory'], factory);
 	}else{
-		factory();
+		factory(Zepto, root.mHistory);
 	}
-}(window, function(mHistory) {
+}(window, function($, mHistory) {
 	$(function(){
 		var trigger = $('[role="show-datepicker"]');
 		if(!trigger.length) return false;

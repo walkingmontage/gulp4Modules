@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>datePicker</title>
+	<meta charset='utf-8'>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<link rel="stylesheet" href="/release/demo/module-test/main-224ff92a.css"/>
+</head>
+
+<body>
+<div class="m-wrapper">
+	<br/>
+	<br/>
+	<div>点击下方方框选择时间</div>
+	<div class="start-time" role="show-datepicker" _for="start_time" show-time="start_time">
+		Start Time
+	</div>
+	<input type="hidden" id="start_time" />
+
+	<br/>
+	<br/>
+	<div>点击下方方框选择时间</div>
+	<div class="end-time" role="show-datepicker" _for="end_time" show-time="end_time">
+		End Time
+	</div>
+	<input type="hidden" id="end_time" />
+</div>
+<script>
+	var require = {
+		baseUrl: '/',
+		urlArgs: "v=1.0.1"
+	};
+</script>
+<script src="/src/require/require.js" data-main="/src/demo/datePicker/main.js"></script>
+</body>
+</html>

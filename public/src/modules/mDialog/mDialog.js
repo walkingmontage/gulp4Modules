@@ -1,27 +1,10 @@
 ;(function (root, factory) {
 	if (typeof define === 'function' && define.amd){
-		define(['mHistory'], function(mh){
-			factory(mh)
-		});
+		define(['zepto', 'mHistory', 'popup'],factory);
 	}else{
-		factory(root.mHistory);
+		factory(Zepto, root.mHistory);
 	}
-}(window, function(mHistory) {
-	$.popPosition = function(popWin) {
-		var scrollH = $('body').scrollTop() || $('html').scrollTop();
-		//var winX = $(window).width();
-		//var winY = $(window).height();
-		var winX = document.documentElement.clientWidth;
-		var winY = window.innerHeight || document.documentElement.clientHeight;
-
-		var popY = popWin.height();
-		var popX = popWin.width();
-
-		var top = (winY - popY)/2 + scrollH;
-		var left = (winX - popX)/2;
-		popWin.css({top:top + 'px',left:left + 'px',marginTop:'-10px'});
-	}
-
+}(window, function($, mHistory) {
 
 	$.showTip = function(msg) {
 		var pop = $('#commonTipBox');
@@ -39,39 +22,6 @@
 		},2000);
 	}
 
-
-	$.hidePopUp = function() {
-		var pop = $('.common-popup'),
-			bottomPop = $('.common-bottom-popup');
-		var wrapper = $('#transWrapper');
-		if(bottomPop.length){
-			bottomPop.css('bottom','-'+bottomPop.height()+'px');
-		}
-		if(wrapper.length > 0){
-			wrapper.remove();
-		}
-		if(pop){
-			pop.remove();
-		}
-	}
-
-	$.showLoading = function() {
-		var pop = $('#loadingWrapper');
-//                var y = window.scrollY;
-//                window.scroll(0,y);
-		if(pop.length > 0){
-			pop.css('display','block');
-		}else{
-			pop = $('<div id="loadingWrapper" class="common-loading"><img src="http://www.immomo.com/static/a2/img/loading.gif" /></div>');
-			$('body').append(pop);
-		}
-		$.popPosition(pop);
-	}
-
-	$.hideLoading = function() {
-		var pop = $('#loadingWrapper');
-		pop.css('display','none');
-	}
 	$.showWrapper = function(callback){
 		var wrapper = $('#transWrapper');
 		var _H = $(document).height();
@@ -303,5 +253,113 @@
 				$.hidePopUp();
 			});
 		},200)
+	}
+
+	$.showOptions = function(){
+		if(!arguments.length) return false;
+		var obj = arguments[0];
+
+		var til = obj.title || '请选择',
+			option = obj.option || '',
+			val = obj.value || option,
+			type = obj.type || 1,
+			pop = $('.common-popup');
+
+		var html = '<div class="title">'+til+'</div><div class="options-pop-list">';
+		for(var i = 0;i < option.length;i++){
+			html += '<div class="option-pop-content" data-value="'+ val[i] +'">' + option[i] + '</div>';
+		}
+		html+= '</div>';
+
+		if(pop.length > 0){
+			pop.html(html).attr('id','selectListPop').css('display','block');
+		}else{
+			pop = $('<div id="selectListPop" class="common-popup">'+html+'</div>');
+			$('body').append(pop);
+		}
+
+		$.showWrapper(obj.finish);
+		$.popPosition(pop);
+		mHistory.addState({pop:1});
+		history.pushState({pop:1},null,null);
+
+		$('#selectListPop .option-pop-content').on('click',function(){
+			var $this = $(this);
+			var val = $this.attr('data-value'),
+				option = $this.html();
+
+			$.hidePopUp();
+			history.go(-1);
+
+			if(val === 'openAlbum'){
+				if (typeof window.MomoBridge == 'object')  {
+					MomoBridge.ready(function(BRG){
+						BRG.invoke('readImage', {
+							//id: 'imgPreview_0',
+							id:$this.attr('_imgid'),
+							method:1,
+							type:'base64'
+						},function(id,data,size,type){
+							if(!data) return false;
+							$('#'+id)[0].src="data:image/jpeg;base64,"+data;
+							var src = $('#'+id)[0].src;
+							if(window.setImageCallback) setImageCallback(id,src,data);
+
+						})
+					})
+				} else {
+					momo_btn_controller.controller_init_callback=function(){
+						momo_btn_controller.readImage(JSON.stringify({
+							//id: 'imgPreview_0',
+							id:$this.attr('_imgid'),
+							method:1,
+							type:'base64'
+						}));
+					};
+					momo_btn_controller.momo_btn_controller_init();
+				}
+			}else if(val === 'openCamera'){
+				if (typeof window.MomoBridge == 'object')  {
+					MomoBridge.ready(function(BRG){
+						BRG.invoke('readImage', {
+							//id: 'imgPreview_0',
+							id:$this.attr('_imgid'),
+							method:2,
+							type:'base64'
+						},function(id,data,size,type){
+							if(!data) return false;
+							$('#'+id)[0].src="data:image/jpeg;base64,"+data;
+							var src = $('#'+id)[0].src;
+							if(window.setImageCallback) setImageCallback(id,src,data);
+
+						})
+					})
+				} else {
+					momo_btn_controller.controller_init_callback=function(){
+						momo_btn_controller.readImage(JSON.stringify({
+							//id: 'imgPreview_0',
+							id:$this.attr('_imgid'),
+							method:2,
+							type:'base64'
+						}));
+					};
+					momo_btn_controller.momo_btn_controller_init();
+				}
+			} else {
+				if(typeof obj.callback === 'function'){
+					if(type == 1){
+						obj.callback(val);
+					}else if(type == 2){
+						obj.callback(option);
+					}else{
+						obj.callback(val,option);
+					}
+				}
+			}
+
+			if(typeof obj.finish === 'function'){obj.finish();}
+
+		})
+		return pop.find('.option-pop-content');
 	}
 }));

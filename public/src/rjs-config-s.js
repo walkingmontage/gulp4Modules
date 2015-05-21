@@ -12,6 +12,7 @@
 		mCookie:'../../modules/mCookie/mCookie',
 		mDialog:'../../modules/mDialog/mDialog',
 		mHistory:'../../modules/mHistory/mHistory',
+		popup: '../../modules/popup/popup',
 		mProgress:'../../modules/mProgress/mProgress',
 		mQuery:'../../modules/mQuery/mQuery',
 		mUploadImg:'../../modules/mUploadImg/mUploadImg',

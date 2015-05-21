@@ -3,7 +3,7 @@ require.config({
 		jquery: 'src/jquery/jquery-2.1.4.min',
 		zepto: 'src/zepto/zepto.1.1.6.min',
 		mDialog:'src/modules/mDialog/mDialog',
-		mHistroy:'src/modules/mHistroy/mHistroy',
+		mHistory:'src/modules/mHistory/mHistory',
 		mClone:'src/modules/mClone/mClone',
 		datePicker: 'src/modules/datePicker/datePicker',
 		calendar: 'src/modules/calendar/calendar'
@@ -34,5 +34,6 @@ require(['zepto', 'mDialog', 'mClone', 'datePicker', 'calendar'], function($){
 		});
 		cal.init();
 
+		alert('hhhhhhhhhhhhhh');
 	});
 });

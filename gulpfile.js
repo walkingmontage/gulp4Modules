@@ -142,7 +142,7 @@ var rmOrig = function() {
 
 gulp.task('release', ['rjs', 'less'], function(cb){
 	gulp.src([baseTempPath + moduleName +'/**/*.{js,css}'])
-		.pipe(gulpif(md5, rename(function (path) {
+		.pipe(gulpif(!!md5, rename(function (path) {
 			path.basename += "-" + md5;
 		})))
 		.pipe(rev())

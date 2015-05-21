@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>mDialog</title>
+	<meta charset='utf-8'>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<link rel="stylesheet" href="/release/demo/module-test/main-224ff92a.css"/>
+</head>
+
+<body>
+<div class="btn-wrapper">
+	<br/>
+	<a href="javascript:;" class="btn get-vercode-btn" id="btn-1">半透明tip</a>
+	<br/>
+	<a href="javascript:;" class="btn get-vercode-btn" id="btn-2">alert</a>
+	<br/>
+	<a href="javascript:;" class="btn get-vercode-btn" id="btn-3">confirm</a>
+	<br/>
+	<a href="javascript:;" class="btn get-vercode-btn" id="btn-4">弹窗选项列表</a>
+	<br/>
+</div>
+
+<script src="../../zepto/zepto.1.1.6.min.js"></script>
+<script src="../../modules/mHistory/mHistory.js"></script>
+<script src="../../modules/popup/popup.js"></script>
+<script src="../../modules/mDialog/mDialog.js"></script>
+<script>
+	$(function(){
+		$('#btn-1').on('click', function(){
+			$.showTip('这是一个提示');
+		});
+
+		$('#btn-2').on('click', function(){
+			$.alert({
+				content:'这是一个提示',
+				callback:function(){},
+				title:'标题',
+				btn:'按钮文本'
+			});
+		});
+
+		$('#btn-3').on('click', function(){
+			$.confirm({
+				content:'这是一个提示',
+				callback:function(){},
+				title:'标题',
+				btn1:'左边按钮文本',
+				btn2:'右边按钮文本'
+			});
+		});
+
+		$('#btn-4').on('click', function() {
+			$.showOptions({
+				option: ['选项1', '选项2'],
+				value: [1, 2],
+				callback: function (option) {
+					alert(option)
+				}
+			});
+		});
+	});
+</script>
+</body>
+</html>
