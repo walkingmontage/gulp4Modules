@@ -34,6 +34,5 @@ require(['zepto', 'mDialog', 'mClone', 'datePicker', 'calendar'], function($){
 		});
 		cal.init();
 
-		alert('hhhhhhhhhhhhhh');
 	});
 });

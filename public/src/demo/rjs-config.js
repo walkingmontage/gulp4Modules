@@ -34,6 +34,9 @@
 	modules: [
 	 {
 		 name: 'module-test/main'
-	 }
+	 },
+		{
+			name: 'module-test2/main'
+		}
 	]
 })

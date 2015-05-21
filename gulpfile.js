@@ -2,12 +2,9 @@ var
 	gulp = require('gulp'),
 	path = require('path'),
 	gulpif = require('gulp-if'),
-	concat = require('gulp-concat'),
-	uglify = require('gulp-uglify'),
 	gutil = require('gulp-util'),
 	through = require('through2'),
 	argv = require('yargs').argv,
-	_ = require('underscore'),
 	exec = require('child_process').exec,
 	less = require('gulp-less'),
 	minifyCSS = require('gulp-minify-css'),
@@ -36,9 +33,6 @@ if(gulpCommand === 'release' && (!name || !moduleName || !fileName)){
 }
 
 
-	//@baseDevPath 是业务开发目录，默认为public/src/demo/ 可通过p参数改变
-	//@baseBuildPath 是业务打包目录，默认值和参数同上
-
 var
 	basePath = 'public/src/',
 	baseDevPath = 'public/src/' + product + '/',
@@ -54,7 +48,7 @@ var
 		return true;
 	};
 
-//打包单个文件，如打包 module-test/main.js
+//使用r.js打包单个文件，如打包 module-test/main.js
 gulp.task('rjs', function(cb){
 	if(!isModuleExists(baseDevPath + name + '.js', 'js')){
 		return;
@@ -125,7 +119,6 @@ var rmOrig = function() {
 			return cb(); // Nothing to remove :)
 		}
 
-		//log(colors.red('DELETING'), file.revOrigPath);
 		fs.unlink(file.revOrigPath, function(err) {
 			cb();
 		});
@@ -140,10 +133,12 @@ var rmOrig = function() {
 	});
 };
 
-/*
-	打包单个模块，gulp命令：
-	gulp release -n module-test/main
-*/
+
+
+/***************** 发布命令 ****************/
+
+// 打包单个模块，gulp命令：
+// gulp release -n module-test/main
 
 gulp.task('release', ['rjs', 'less'], function(cb){
 	gulp.src([baseTempPath + moduleName +'/**/*.{js,css}'])
@@ -160,13 +155,16 @@ gulp.task('release', ['rjs', 'less'], function(cb){
 });
 
 
-/*
-	打包文件夹，gulp命令：
-	gulp release-all -m
- */
+// 打包文件夹，gulp命令：
+// gulp release-all
+
 gulp.task('release-all', ['rjs-all', 'less-all'], function() {
+
+	//{js,css} node-glob语法，逗号后不能有空格
 	gulp.src([baseTempPath + '**/*.{js,css}'])
-		.pipe(gulpif(md5, rename(function (path) {
+
+		//gulpif 第一个参数 只能接受boolean类型
+		.pipe(gulpif(!!md5, rename(function (path) {
 			path.basename += "-" + md5;
 		})))
 		.pipe(rev())

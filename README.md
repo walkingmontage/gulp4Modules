@@ -1,31 +1,9 @@
-# 关键词: GulpJs、Requirejs、LessCss、md5
-
-
-## 前端自动化部署
+# 前端自动化部署
+## GulpJs + Requirejs + LessCss + md5
 > 目前主要针对CSS和JS的合并、压缩、添加md5版本号，其他功能后续添加！
 
-#### 一、环境安装
-> 1. 安装nodejs环境
-> 2. 安装[gulp](http://gulpjs.com/): npm install --global gulp
-> 3. 依赖的node/gulp插件，package目录：
->
-```
-"devDependencies": {
-  "gulp": "^3.8.11",
-  "gulp-concat": "~2.5.2",
-  "gulp-less": "~3.0.3",
-  "gulp-minify-css": "~1.1.1",
-  "gulp-rev": "~3.0.1",
-  "gulp-uglify": "~1.2.0",
-  "underscore": "~1.8.3",
-  "gulp-util": "~3.0.4",
-  "yargs": "~3.9.1",
-  "through2": "~0.6.5",
-  "del": "~1.2.0"
-}
-```
 
-#### 二、项目结构
+#### 一、项目结构
 ###### 以 `public/src/demo/module-test/` 做为案例
 ```
   package.json
@@ -51,7 +29,63 @@
 >* `public/src/demo/rjs-config.js`  为某个目录打包的配置文件。 每个业务目录需要配置一个rjs-config.js文件
 
 
-### 三、实例分析
+
+#### 二、Gulp命令发布
+
+###### 1. 发布单个模块
+合并压缩public/src/demo/module-test/main.js及其依赖的模块，编译main.less，加上md5版本号， 命令：
+
+```
+gulp release -n module-test/main
+```
+
+命令解释：
+
+>* `release` 为gulp的task名称， 后面的都是传递的参数。
+>* `-paramName paramValue` 这是参数的书写格式， name和value以空格分开，两个参数中间以空格分开
+>* `-n` [必填] 要压缩的JS模块名称
+
+选传参数：
+
+>* `-e` [选填] 不需要合并的JS模块，参考r.js参数
+如：`-e zepto,mClone` 表示合并JS的时候不合并zepto和mClone模块
+
+>* `-m` [选填] 添加md5版本号
+md5后面可以加参数值， `-m 3.0.1` 生成的文件名为数字+md5如： `main-3.0.1-a7a6b03d.js` 。也可以不加参数值，结果为 `main-a7a6b03d.js`
+
+>* `-p` [选填] 项目子目录。默认为demo。
+如：`-n module-test/main -p demo`  最终的路径为: public/src/demo/module-test/main
+
+最长的命令：
+
+```
+gulp release -n module-test/main -e zepto,mClone -m 1.0.1 -p 2015
+```
+表示： 合并压缩`public/src/2015/module-test/main.js`除了zepto和mClone的所有模块， 编译main.less， 并加上带`-1.0.1`前缀的版本号
+
+
+###### 2. 发布一个目录（多个模块）
+打包`public/src/demo` 下的所有模块，包括js压缩合并，Less压缩合并，增加md5版本号，命令：
+
+```
+gulp release-all
+```
+
+选传参数：
+>* `-p` 同上
+>* `-m` 同上
+
+
+最长的命令：
+
+```
+gulp release-all -m 1.0.1 -p 2015
+```
+表示： 合并压缩public/src/2015目录下的所有模块， 编译所有less， 并加上带`-1.0.1`前缀的版本号
+
+
+
+### 三、requirejs 使用规范
 ###### 以`public/src/demo/module-test` 模块作为案例
 ###### 1. html 部分:
 `- public/src/module-test/main.html`
@@ -94,10 +128,6 @@ require(['zepto', 'mDialog', 'mClone', 'datePicker', 'calendar'], function($){
       btn:'按钮文本'
     });
 
-    var mClone = require('mClone');
-    alert(mClone);
-
-
     var calendar = require('calendar');
     var cal = new calendar({
       item: $('.calendar'),
@@ -109,8 +139,6 @@ require(['zepto', 'mDialog', 'mClone', 'datePicker', 'calendar'], function($){
       }
     });
     cal.init();
-
-    alert('123456')
   });
 });
 ```
@@ -165,48 +193,12 @@ mHistory.addState({pop:1});
 
 
 
-#### 四、使用Gulp命令发布
 
-###### 1. 发布单个模块
-进入fes根目录，执行`gulp release` 命令
-```
-gulp release --name module-test/module-test --exclude zepto,mClone --md5 3.0.1 --product demo
-```
+#### 四、 其他可以了解的
 
-`public/src/demo/module-test` 模块都打包完毕，包括requirejs压缩合并，Less压缩合并，增加md5版本。
+##### 1. 关于paths的含义
 
-
->* `release` 为gulp的task名称， 后面的都是传递的参数。
->* `--paramName paramValue` 这是参数的书写格式， name和value以空格分开，两个参数中间以空格分开
-
->* `@name` [必填] 模块名称
-
->* `@exclude` [选填] 不需要合并的JS模块，参考r.js参数
-如：`--exclude zepto,mClone` 表示合并JS的时候不合并zepto和mClone模块
-
->* `@md5` [选填] 添加md5版本号
-md5后面可以加参数值， `--md5 3.0.1` 生成的文件名为数字+md5如： `main-3.0.1-a7a6b03d.js` 。也可以不加参数值，结果为 `main-a7a6b03d.js`
-
->* `@product` [选填] 项目子目录。默认为demo。
-如：`--name module-test/module-test -- product demo`  最终的路径为: public/src/demo/module-test/module-test
-
-###### 2. 发布一个目录（多个模块）
-进入fes根目录，执行`gulp release-all` 命令
-
-```
-gulp release-all --product demo --md5 3.0.1
-```
-
-`public/src/demo` 下的所有模块都打包完毕，包括requirejs压缩合并，Less压缩合并，增加md5版本号。
-
->* `@product` 同上
->* `@md5` 同上
-
-
-#### 五、关于paths的含义
-
-
-**1. `rjs-config-s.js` 和 `rjs-config.js`**
+**（1） `rjs-config-s.js` 和 `rjs-config.js`**
 
 ```
 ({
@@ -229,7 +221,7 @@ gulp release-all --product demo --md5 3.0.1
 
 
 
-**2. `public/src/demo/module-test/main.js`**
+**（2） `public/src/demo/module-test/main.js`**
 
 ```
 require.config({
@@ -247,6 +239,21 @@ require.config({
 >* `@paths` requirejs查找依赖模块时使用的映射。
 
 
+#####2. 关于package.json中以来模块的解释
+
+
+```
+"devDependencies": {
+  "gulp": "^3.8.11",  //gulp
+  "gulp-less": "~3.0.3",  //less编译
+  "gulp-minify-css": "~1.1.1",  //css压缩
+  "gulp-rev": "~3.0.1", //静态资源添加版本号
+  "gulp-util": "~3.0.4",  //工具函数
+  "yargs": "~3.9.1",  //获取命令参数
+  "through2": "~0.6.5", //node stream封装
+  "del": "~1.2.0" //删除文件或文件夹
+}
+```
 
 
 
