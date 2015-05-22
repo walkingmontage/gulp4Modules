@@ -1,8 +1,14 @@
-;(function(window, $){
+;(function (root, factory) {
+	if (typeof define === 'function' && define.amd){
+		define(factory);
+	}else{
+		root.mCookie = factory();
+	}
+}(window, function() {
 
 	// A cookie parser/serializer
 	// From https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
-	window.mCookie = {
+	return {
 		getItem: function(sKey) {
 			if (!sKey) {
 				return null;
@@ -51,4 +57,4 @@
 			return aKeys;
 		}
 	};
-})(window, window.jQuery || window.Zepto);
+}));

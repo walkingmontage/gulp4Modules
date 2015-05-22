@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>验证码</title>
+	<meta charset='utf-8'>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<link rel="stylesheet" href="/release/demo/module-test/main-224ff92a.css"/>
+</head>
+
+<body>
+<section class="common-sec">
+	<ul class="common-list">
+		<li>
+			<div class="list-wrapper">
+				<input type="text"  name="vericode" id="vericode" placeholder="输入短信验证码" value="" />
+				<span class="span-right"><a class="btn get-vercode-btn" seconds="30" role="get-vericode" _action="" country_code="+011" phone="68268662">获取验证码</a></span>
+			</div>
+		</li>
+	</ul>
+</section>
+<script>
+	var require = {
+		baseUrl: '/',
+		urlArgs: "v=1.0.1"
+	};
+</script>
+<script src="/src/require/require.js" data-main="/src/demo/captcha/main.js"></script>
+</body>
+</html>

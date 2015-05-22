@@ -1,6 +1,11 @@
 //=========获取验证码按钮配置=============
-//
-;(function ($) {
+;(function (root, factory) {
+	if (typeof define === 'function' && define.amd){
+		define(['zepto'], factory);
+	}else{
+		factory(Zepto);
+	}
+}(window, function($) {
 	$(function(){
 		var trigger = $('[role="get-vericode"]');
 		if(trigger.length == 0) return false;
@@ -30,4 +35,4 @@
 			},'json');
 		});
 	})
-})(window.jQuery || window.Zepto);
+}));

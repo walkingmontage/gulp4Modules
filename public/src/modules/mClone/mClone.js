@@ -7,7 +7,7 @@
 	}else{
 		root.mClone = factory();
 	}
-}(this, function(exports) {
+}(this, function() {
 
 	// A clone method
 	// http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object

@@ -5,7 +5,7 @@
 	}else{
 		root.calendar = factory();
 	}
-}(window, function(exports) {
+}(window, function() {
 	function calendar(o){
 		o = o ? o : {};
 		this.showPast= o.showPast ||false;//true|false 已过期/未到的时间是否显示
