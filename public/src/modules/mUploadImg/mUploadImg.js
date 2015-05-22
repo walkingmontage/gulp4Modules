@@ -1,6 +1,11 @@
 //=========上传图片=============
-
-;(function ($) {
+;(function (root, factory) {
+	if (typeof define === 'function' && define.amd){
+		define(['zepto'], factory);
+	}else{
+		factory(Zepto);
+	}
+}(window, function($) {
 	$(function(){
 
 		FastClick.attach(document.body);//防止“点透”
@@ -25,4 +30,4 @@
 			}
 		})
 	})
-})(window.jQuery || window.Zepto);
+}));

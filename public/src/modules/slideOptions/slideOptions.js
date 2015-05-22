@@ -1,6 +1,11 @@
 //=========选择滑动列表选项=============
-
-;(function ($) {
+;(function (root, factory) {
+	if (typeof define === 'function' && define.amd){
+		define(['zepto'], factory);
+	}else{
+		factory(Zepto);
+	}
+}(window, function($) {
 	$(function(){
 		var list = $('.blue-icon-list');
 		if(list.length == 0) return false;
@@ -29,4 +34,4 @@
 			}
 		});
 	});
-})(window.jQuery || window.Zepto);
+}));

@@ -1,6 +1,11 @@
 //another scrollLoad,just excute one time
-;
-(function ($) {
+;(function (root, factory) {
+	if (typeof define === 'function' && define.amd){
+		define(['zepto'], factory);
+	}else{
+		factory(Zepto);
+	}
+}(window, function($) {
 	$.scrollLoad = function (eleClass, callback, threshold) {
 		var $w = $(window),
 			th = threshold || 0,
@@ -34,4 +39,4 @@
 			return eb >= wt - th && et <= wb + th;
 		}
 	};
-})(window.jQuery || window.Zepto);
+}));

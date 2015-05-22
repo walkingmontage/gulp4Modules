@@ -1,6 +1,11 @@
 // Scroll loading elements with callback
-;(function($) {
-
+;(function (root, factory) {
+	if (typeof define === 'function' && define.amd){
+		define(['zepto'], factory);
+	}else{
+		factory(Zepto);
+	}
+}(window, function($) {
 	$.fn.scrollLoad = function(callback, threshold) {
 
 		var $w = $(window),
@@ -51,4 +56,4 @@
 		scrollLoad();
 		return this;
 	};
-})(window.jQuery || window.Zepto);
+}));

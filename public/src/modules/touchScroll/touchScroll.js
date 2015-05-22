@@ -1,5 +1,11 @@
 //=========触摸滑动（上下／左右）=============
-(function ($) {
+;(function (root, factory) {
+	if (typeof define === 'function' && define.amd){
+		define(['zepto'], factory);
+	}else{
+		factory(Zepto);
+	}
+}(window, function($) {
 	$.touchScroll = function(innerId,outerId,swipe){
 		if(!arguments.length) return ;
 		var obj = {};
@@ -155,4 +161,4 @@
 			}
 		})
 	}
-})(window.jQuery || window.Zepto);
+}));
